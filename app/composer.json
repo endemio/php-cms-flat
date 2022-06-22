@@ -6,6 +6,7 @@
     "ext-intl": "*",
     "ext-json": "*",
     "erusev/parsedown": "^1.7",
+    "google/recaptcha": "^1.2",
     "ramsey/uuid": "^4.2",
     "symfony/yaml": "^5.2",
     "twig/twig": "^3.0"
