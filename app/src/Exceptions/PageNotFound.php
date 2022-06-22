@@ -1,7 +1,8 @@
 <?php
 
+namespace App\Exceptions;
 
-class PageNotFound extends Exception
+class PageNotFound extends \Exception
 {
 
 }

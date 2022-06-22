@@ -1,7 +1,8 @@
 <?php
 
+namespace App\Exceptions;
 
-class TemplateNotFound extends Exception
+class TemplateNotFound extends \Exception
 {
 
 }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Exceptions\PageNotFound;
 use App\Service\ConfigService;
 use App\Service\MenuService;
 use App\Service\PagesService;
@@ -50,6 +51,9 @@ class Kernel
 
         try {
             list($page, $content) = $this->page_service->data($_SERVER['REQUEST_URI']);
+        } catch (PageNotFound $exception){
+            echo $this->render_service->page404($menu);
+            return;
         } catch (\Exception $exception) {
             echo $exception->getMessage();
             echo $this->render_service->error($menu);

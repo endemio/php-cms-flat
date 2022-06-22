@@ -172,9 +172,6 @@ class MenuService extends TreeManagingService
         return $this->fetchMenuCurrentLevel($result[$level-1]);
     }
 
-
-
-
     public function fetchActive(string $path): array
     {
 
@@ -184,7 +181,11 @@ class MenuService extends TreeManagingService
 
         $list = parent::transformTreeToArray($this->menu, 'child');
 
-        return parent::fetchAllActive($list, $path);
+        try {
+            return parent::fetchAllActive($list, $path);
+        }catch (\Exception $exception){
+            return [];
+        }
 
     }
 

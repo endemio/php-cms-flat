@@ -55,11 +55,25 @@ class RenderService
         return $this->template->render(['content' => $content, 'page' => $page, 'menu' => $menu]);
     }
 
+    public function page404(array $menu, $content = 'Page not found', $title = 'Page not found error'): string
+    {
+        $template404 = sprintf('%s/%s', $this->path, 'page404.html.twig');
+
+        if (is_file($template404)) {
+            $template = $this->twig->load('page404.html.twig');
+        } else {
+            $template = $this->twig->createTemplate($this->template500());
+        }
+
+        return $template->render(['content' => [$content], 'page' => ['title' => $title], 'menu' => $menu]);
+    }
 
     public function error(array $menu, $content = 'Error', $title = 'Main Error'): string
     {
-        if (is_file(sprintf('%s/%s', $this->path, 'page500.html.twig'))) {
-            $template = $this->twig->load(sprintf('%s/%s', $this->path, 'page500.html.twig'));
+        $template500 = sprintf('%s/%s', $this->path, 'page500.html.twig');
+
+        if (is_file($template500)) {
+            $template = $this->twig->load('page500.html.twig');
         } else {
             $template = $this->twig->createTemplate($this->template500());
         }

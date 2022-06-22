@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exceptions\PageNotFound;
 use Symfony\Component\Yaml\Yaml;
 
 class MainController
@@ -14,7 +15,7 @@ class MainController
     /**
      * @param string $path
      * @return array
-     * @throws \Exception
+     * @throws PageNotFound
      */
     public function parseMD(string $path): array
     {
@@ -22,7 +23,7 @@ class MainController
         $this->parse = new \Parsedown();
 
         if (!is_file($path)) {
-            throw new \Exception('File not found ->' . $path);
+            throw new PageNotFound('File not found ->' . $path);
         }
 
         $content = file_get_contents($path);

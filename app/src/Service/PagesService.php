@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Controller\MainController;
+use App\Exceptions\PageNotFound;
 
 class PagesService extends MainController
 {
@@ -35,16 +36,14 @@ class PagesService extends MainController
     /**
      * @param string $full_path
      * @return array
-     * @throws \Exception
+     * @throws PageNotFound
      */
     public function data(string $full_path): array
     {
 
         $url = parse_url($full_path);
 
-        list($page_config, $contents) = parent::parseMD($this->pages . $url['path'] . '/index.md');
-
-        return [$page_config, $contents];
+        return parent::parseMD($this->pages . $url['path'] . '/index.md');
     }
 
     /**
