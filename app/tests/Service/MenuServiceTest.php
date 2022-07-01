@@ -7,7 +7,7 @@ class MenuServiceTest extends \PHPUnit\Framework\TestCase
 
     private \App\Service\MenuService $service;
 
-    private string $path = '/opt/project/sites/mzhi.localhost';
+    private string $path = '/opt/project/sites/localhost';
 
     public function setUp(): void
     {
@@ -16,12 +16,6 @@ class MenuServiceTest extends \PHPUnit\Framework\TestCase
         $this->service = new \App\Service\MenuService($this->path);
 
     }
-
-//    public function testGetDirContents(){
-//
-//        $result = $this->service->getDirContents($this->path.'/pages');
-//
-//    }
 
 
     public function testGenerateMenuYaml(){
@@ -45,6 +39,8 @@ class MenuServiceTest extends \PHPUnit\Framework\TestCase
     public function testFetchMenuCurrent1stLevel(){
 
         $result = $this->service->fetchMenuCurrentLevel('/test1');
+
+        print_r($result);
 
         $this->assertCount(2, array_keys($result));
         $this->assertEquals('/test1', $result[0]['id']);

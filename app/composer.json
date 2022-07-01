@@ -5,6 +5,7 @@
     "php": "^7.4",
     "ext-intl": "*",
     "ext-json": "*",
+    "ext-pdo": "*",
     "erusev/parsedown": "^1.7",
     "google/recaptcha": "^1.2",
     "ramsey/uuid": "^4.2",

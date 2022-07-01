@@ -84,11 +84,15 @@ class MenuService extends TreeManagingService
 
             #print_r($items);
 
-            $target_element = array_values(array_filter($items, function ($item) use ($path) {
-                return $item['id'] === $path;
-            }))[0]['parent'];
+            $target_elements = array_values(array_filter($items, function ($item) use ($path) {
+                return (!empty($item))?$item['id'] === $path: false;
+            }));
 
-            #print_r($target_element);
+            if (count($target_elements)){
+                $target_element = $target_elements[0]['parent'];
+            } else {
+                $target_element = '';
+            }
 
             $same_level = array_values(array_filter($list, function ($item) use ($target_element) {
                 return $item['parent'] === $target_element;
@@ -96,9 +100,11 @@ class MenuService extends TreeManagingService
 
             $active = $this->fetchActive($path);
 
-            foreach ($same_level as $key => $value) {
-                if (strcmp($active[$this->fetchCurrentLevel($path)], $value['id']) == 0) {
-                    $same_level[$key]['active'] = true;
+            if (!empty($active)) {
+                foreach ($same_level as $key => $value) {
+                    if (strcmp($active[$this->fetchCurrentLevel($path)], $value['id']) == 0) {
+                        $same_level[$key]['active'] = true;
+                    }
                 }
             }
 
@@ -144,6 +150,10 @@ class MenuService extends TreeManagingService
         }));
 
         $active = $this->fetchActive($path);
+
+        if (empty($active)){
+            return $result;
+        }
 
         foreach ($result as $key => $value) {
             if (strcmp($active[0], $value['id']) === 0) {

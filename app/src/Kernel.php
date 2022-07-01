@@ -6,6 +6,7 @@ use App\Exceptions\PageNotFound;
 use App\Service\ConfigService;
 use App\Service\MenuService;
 use App\Service\PagesService;
+use App\Service\RedirectService;
 use App\Service\RenderService;
 
 
@@ -24,6 +25,8 @@ class Kernel
 
     private RenderService $render_service;
 
+    private RedirectService $redirect_service;
+
     public function __construct(string $website)
     {
         $this->website_folder = sprintf('%s/%s/%s',$this->getProjectDir() , self::FOLDER_SITES, $website);
@@ -32,6 +35,7 @@ class Kernel
         $this->menu_service = new MenuService($this->website_folder);
         $this->config_service = new ConfigService($this->website_folder);
         $this->render_service = new RenderService($this->website_folder);
+        $this->redirect_service = new RedirectService($this->website_folder);
 
     }
 
@@ -52,8 +56,16 @@ class Kernel
         try {
             list($page, $content) = $this->page_service->data($_SERVER['REQUEST_URI']);
         } catch (PageNotFound $exception){
-            echo $this->render_service->page404($menu);
-            return;
+            # Try to redirect
+            $this->redirect_service->action($_SERVER['REQUEST_URI']);
+
+            # Try to find data from "lists"
+            list($page, $content) = $this->redirect_service->list($_SERVER['REQUEST_URI']);
+
+            if (empty($page)) {
+                echo $this->render_service->page404($menu);
+                return;
+            }
         } catch (\Exception $exception) {
             echo $exception->getMessage();
             echo $this->render_service->error($menu);

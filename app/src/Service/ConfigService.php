@@ -13,18 +13,23 @@ class ConfigService
 
     private string $path;
 
-    public function __construct(string $path)
+    protected string $website_path;
+
+    public function __construct(string $website_path)
     {
-        $this->path = sprintf('%s/%s',$path,self::FOLDER_CONFIG);
-        if (!is_dir($this->path)){
+        $this->website_path = $website_path;
+        $this->path = sprintf('%s/%s', $website_path, self::FOLDER_CONFIG);
+        if (!is_dir($this->path)) {
             mkdir($this->path);
         }
     }
 
-    public function load(){
-
-        $this->config = Yaml::parseFile(sprintf('%s/%s', $this->path, 'config.yaml'));
-
+    public function load(string $file = 'config.yaml'): array
+    {
+        if (is_file(sprintf('%s/%s', $this->path, $file))) {
+            return Yaml::parseFile(sprintf('%s/%s', $this->path, $file));
+        }
+        return [];
     }
 
 

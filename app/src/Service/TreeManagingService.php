@@ -40,7 +40,14 @@ class TreeManagingService extends MainController
         try {
             $target_tree = array_values(array_filter($tree, function ($item) use ($root_id) {
                 return isset($item[self::ID]) ? $item[self::ID] === $root_id : false;
-            }))[0];
+            }));
+
+            if(count($target_tree)){
+                $target_tree = $target_tree[0];
+            } else {
+                $target_tree = $tree[0];
+            }
+
         } catch (Exception $exception) {
             print $exception->getMessage();
             #$this->logger->exception($exception, $this->DEBUG());
@@ -182,23 +189,25 @@ class TreeManagingService extends MainController
      */
     public function fetchRootElementId(string $id, array $array, string $index_parent): string
     {
-
-        #$this->logger->debug(sprintf('Try to generate tree main HQ company Id'), $this->Log(__FUNCTION__), $this->DEBUG());
-
         $has_hq = true;
         $counter = 0;
 
         while ($has_hq) {
 
             try {
-                $company = array_values(array_filter($array, function ($item) use ($id) {
+                $companies = array_values(array_filter($array, function ($item) use ($id) {
                     return $item[self::ID] === $id;
-                }))[0];
+                }));
+
+                if (!count($companies)){
+                   return '';
+                }
+
+                $company = $companies[0];
+
             } catch (Exception $exception) {
                 return '';
             }
-
-            #print $company[$index_parent].PHP_EOL;
 
             if (strcmp($company[$index_parent], $this->top) !== 0) {
                 $id = $company[$index_parent];
