@@ -63,6 +63,7 @@ class Kernel
             list($page, $content) = $this->redirect_service->list($_SERVER['REQUEST_URI']);
 
             if (empty($page)) {
+                header("HTTP/1.0 404 Not Found");
                 echo $this->render_service->page404($menu);
                 return;
             }
