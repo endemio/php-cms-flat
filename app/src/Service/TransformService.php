@@ -18,10 +18,15 @@ class TransformService extends ConfigService
 
         foreach ($config as $item) {
             if (preg_match($item['pattern'], $path, $matches)) {
-                require_once $this->website_path . '/transforms/redirect/' . $item['folder'] . '/index.php';
-                $class_name = "\Redirect\\" .$item['class'];
-                $instance = new $class_name($this->website_path, $item);
-                $instance->check([$path, $item['pattern']]);
+
+                if (!empty($item['class'])) {
+                    $class_name = "\Redirect\\" . $item['class'];
+                    require_once $this->website_path . '/transforms/redirect/' . $item['folder'] . '/index.php';
+                    $instance = new $class_name($this->website_path, $item);
+                    $instance->check([$path, $item['pattern']]);
+                } elseif ($item['type'] == 'direct') {
+                    header(sprintf("Location: %s", $item['target']));
+                }
             }
         }
     }
