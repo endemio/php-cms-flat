@@ -6,7 +6,7 @@ use App\Exceptions\PageNotFound;
 use App\Service\ConfigService;
 use App\Service\MenuService;
 use App\Service\PagesService;
-use App\Service\RedirectService;
+use App\Service\TransformService;
 use App\Service\RenderService;
 
 
@@ -25,7 +25,7 @@ class Kernel
 
     private RenderService $render_service;
 
-    private RedirectService $redirect_service;
+    private TransformService $redirect_service;
 
     public function __construct(string $website)
     {
@@ -35,7 +35,7 @@ class Kernel
         $this->menu_service = new MenuService($this->website_folder);
         $this->config_service = new ConfigService($this->website_folder);
         $this->render_service = new RenderService($this->website_folder);
-        $this->redirect_service = new RedirectService($this->website_folder);
+        $this->redirect_service = new TransformService($this->website_folder);
 
     }
 
@@ -57,7 +57,7 @@ class Kernel
             list($page, $content) = $this->page_service->data($_SERVER['REQUEST_URI']);
         } catch (PageNotFound $exception){
             # Try to redirect
-            $this->redirect_service->action($_SERVER['REQUEST_URI']);
+            $this->redirect_service->redirect($_SERVER['REQUEST_URI']);
 
             # Try to find data from "lists"
             list($page, $content) = $this->redirect_service->list($_SERVER['REQUEST_URI']);

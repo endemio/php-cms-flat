@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tests\App\Services\Helper;
+namespace App\Tests\Service;
 
 
 use App\Service\TreeManagingService;
@@ -25,14 +25,14 @@ class TreeManagingServiceTest extends \PHPUnit\Framework\TestCase
         $this->tree_service->setTop('');
     }
 
-//    public function testGenerateTree()
-//    {
-//        $input = $this->input();
-//        $tree = $this->tree_service->transformArrayToTree($input, '',
-//            self::PARENT_ID,self::CHILD);
-//
-//        $this->assertEquals('5', $tree[0][self::CHILD][0][self::CHILD][0][self::CHILD][1]['id']);
-//    }
+    public function testGenerateTree()
+    {
+        $input = $this->input();
+        $tree = $this->tree_service->transformArrayToTree($input, '',
+            self::PARENT_ID,self::CHILD);
+
+        $this->assertEquals('5', $tree[0][self::CHILD][0][self::CHILD][0][self::CHILD][1]['id']);
+    }
 
     public function testExtractTreePartByRootId1stLevel(){
 
@@ -44,51 +44,51 @@ class TreeManagingServiceTest extends \PHPUnit\Framework\TestCase
 
         print_r($new_tree);
 
-//        $this->assertEquals('4', $new_tree[self::CHILD][0][self::CHILD][0]['id']);
-//        $this->assertEquals('8', $new_tree[self::CHILD][1][self::CHILD][1]['id']);
+        $this->assertEquals('4', $new_tree[self::CHILD][0][self::CHILD][0]['id']);
+        $this->assertEquals('8', $new_tree[self::CHILD][1][self::CHILD][1]['id']);
 
     }
 
-//    public function testExtractTreePartByRootId(){
-//
-//        $input = $this->input();
-//        $tree = $this->tree_service->transformArrayToTree($input, '', self::PARENT_ID, self::CHILD);
-//
-//        $input = $this->input();
-//        $new_tree = $this->tree_service->extractTreePartByRootId('2', $tree, $input, self::PARENT_ID, self::CHILD);
-//
-//        $this->assertEquals('4', $new_tree[self::CHILD][0][self::CHILD][0]['id']);
-//        $this->assertEquals('8', $new_tree[self::CHILD][1][self::CHILD][1]['id']);
-//
-//    }
-//
-//    public function testTransformTreeToArray(){
-//
-//        $input = $this->input();
-//        $tree = $this->tree_service->transformArrayToTree($input, '', self::PARENT_ID, self::CHILD);
-//
-//        $input = $this->input();
-//        $new_tree = $this->tree_service->extractTreePartByRootId('2', $tree, $input, self::PARENT_ID, self::CHILD);
-//
-//        $result = $this->tree_service->transformTreeToArray($new_tree[self::CHILD], self::CHILD);
-//
-//        $this->assertCount(8, $result);
-//
-//    }
-//
-//    public function testTransformTreeToArray2(){
-//
-//        $input = $this->input();
-//        $tree = $this->tree_service->transformArrayToTree($input, '', self::PARENT_ID, self::CHILD);
-//
-//        $input = $this->input();
-//        $new_tree = $this->tree_service->extractTreePartByRootId('9', $tree, $input, self::PARENT_ID, self::CHILD);
-//
-//        $result = $this->tree_service->transformTreeToArray($new_tree, self::CHILD);
-//
-//        $this->assertCount(2, $result);
-//
-//    }
+    public function testExtractTreePartByRootId(){
+
+        $input = $this->input();
+        $tree = $this->tree_service->transformArrayToTree($input, '', self::PARENT_ID, self::CHILD);
+
+        $input = $this->input();
+        $new_tree = $this->tree_service->extractTreePartByRootId('2', $tree, $input, self::PARENT_ID, self::CHILD);
+
+        $this->assertEquals('4', $new_tree[self::CHILD][0][self::CHILD][0]['id']);
+        $this->assertEquals('8', $new_tree[self::CHILD][1][self::CHILD][1]['id']);
+
+    }
+
+    public function testTransformTreeToArray(){
+
+        $input = $this->input();
+        $tree = $this->tree_service->transformArrayToTree($input, '', self::PARENT_ID, self::CHILD);
+
+        $input = $this->input();
+        $new_tree = $this->tree_service->extractTreePartByRootId('2', $tree, $input, self::PARENT_ID, self::CHILD);
+
+        $result = $this->tree_service->transformTreeToArray($new_tree[self::CHILD], self::CHILD);
+
+        $this->assertCount(8, $result);
+
+    }
+
+    public function testTransformTreeToArray2(){
+
+        $input = $this->input();
+        $tree = $this->tree_service->transformArrayToTree($input, '', self::PARENT_ID, self::CHILD);
+
+        $input = $this->input();
+        $new_tree = $this->tree_service->extractTreePartByRootId('9', $tree, $input, self::PARENT_ID, self::CHILD);
+
+        $result = $this->tree_service->transformTreeToArray($new_tree, self::CHILD);
+
+        $this->assertCount(2, $result);
+
+    }
 
 
     private function input(): array
