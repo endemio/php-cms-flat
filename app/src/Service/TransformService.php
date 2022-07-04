@@ -43,7 +43,6 @@ class TransformService extends ConfigService
                 if (is_file($this->website_path . '/transforms/list/' . $item['folder'] . '/index.php')) {
                     require_once $this->website_path . '/transforms/list/' . $item['folder'] . '/index.php';
                     $class_name = "\Lists\\" . $item['class'];
-                    #print_r('123');
                     $instance = new $class_name();
                     return [$item, $instance->check($matches)];
                 }
