@@ -21,9 +21,8 @@ class TransformService extends ConfigService
                     $class_name = "\Redirect\\" . $item['class'];
                     require_once $this->website_path . '/transforms/redirect/' . $item['folder'] . '/index.php';
                     $instance = new $class_name($this->website_path, $item);
-                    $instance->check([$path, $item['pattern']]);
+                    return $instance->check([$path, $item['pattern']]);
                 } elseif ($item['type'] == 'direct') {
-                    #print_r('121');
                     header(sprintf("Location: %s", $item['target']));
                     return true;
                 }
