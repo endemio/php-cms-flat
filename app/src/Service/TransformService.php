@@ -7,16 +7,14 @@ namespace App\Service;
 class TransformService extends ConfigService
 {
 
-    public function __construct($website_path)
+    public function redirect(string $path): bool
     {
-        parent::__construct($website_path);
-    }
-
-    public function redirect(string $path): void
-    {
-        $config = $this->load('redirect.yaml');
+        $config = $this->loadConfig('redirect.yaml');
 
         foreach ($config as $item) {
+
+            #print $item['pattern'].' '. $path.PHP_EOL;
+
             if (preg_match($item['pattern'], $path, $matches)) {
 
                 if (!empty($item['class'])) {
@@ -25,15 +23,19 @@ class TransformService extends ConfigService
                     $instance = new $class_name($this->website_path, $item);
                     $instance->check([$path, $item['pattern']]);
                 } elseif ($item['type'] == 'direct') {
+                    #print_r('121');
                     header(sprintf("Location: %s", $item['target']));
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     public function list(string $path): array
     {
-        $config = $this->load('lists.yaml');
+        $config = $this->loadConfig('lists.yaml');
+
         foreach ($config as $item) {
             if (preg_match($item['pattern'], $path, $matches)) {
                 require_once $this->website_path . '/transforms/list/' . $item['folder'] . '/index.php';

@@ -4,33 +4,22 @@
 namespace App\Service;
 
 
-use Symfony\Component\Yaml\Yaml;
-
-class ConfigService
+class ConfigService extends DefaultService
 {
 
-    const FOLDER_CONFIG = 'config';
-
-    private string $path;
-
-    protected string $website_path;
+    protected string $path;
 
     public function __construct(string $website_path)
     {
         $this->website_path = $website_path;
-        $this->path = sprintf('%s/%s', $website_path, self::FOLDER_CONFIG);
-        if (!is_dir($this->path)) {
-            mkdir($this->path);
-        }
+        $this->path = $this->checkFolderExist(sprintf('%s/%s', $website_path, self::FOLDER_CONFIG));
     }
 
-    public function load(string $file = 'config.yaml'): array
+    public function loadConfig($filename): array
     {
-        if (is_file(sprintf('%s/%s', $this->path, $file))) {
-            return Yaml::parseFile(sprintf('%s/%s', $this->path, $file));
-        }
-        return [];
-    }
 
+        return $this->load(sprintf('%s/%s', $this->path, $filename));
+
+    }
 
 }

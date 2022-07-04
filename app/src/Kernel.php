@@ -7,7 +7,7 @@ use App\Service\ConfigService;
 use App\Service\MenuService;
 use App\Service\PagesService;
 use App\Service\TransformService;
-use App\Service\RenderService;
+use App\Service\View\RenderService;
 
 
 class Kernel
@@ -57,7 +57,9 @@ class Kernel
             list($page, $content) = $this->page_service->data($_SERVER['REQUEST_URI']);
         } catch (PageNotFound $exception){
             # Try to redirect
-            $this->redirect_service->redirect($_SERVER['REQUEST_URI']);
+            if ($this->redirect_service->redirect($_SERVER['REQUEST_URI'])){
+                return;
+            }
 
             # Try to find data from "lists"
             list($page, $content) = $this->redirect_service->list($_SERVER['REQUEST_URI']);
@@ -74,7 +76,7 @@ class Kernel
         }
 
         try {
-            $this->render_service->load($page, $menu);
+            $this->render_service->loadTemplate($page, $menu);
         } catch (\Exception $exception) {
             echo $exception->getMessage();
             echo $this->render_service->error($menu, 'Failed load template', 'Error loading template');

@@ -4,11 +4,9 @@
 namespace App\Service;
 
 
-use App\Controller\MainController;
-
 use Exception;
 
-class TreeManagingService extends MainController
+class TreeManagingService
 {
 
     const ID = 'id';

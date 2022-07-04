@@ -2,35 +2,16 @@
 
 namespace App\Service;
 
-use App\Controller\MainController;
 use App\Exceptions\PageNotFound;
 
-class PagesService extends MainController
+class PagesService extends DefaultService
 {
-
-    private string $folder;
 
     private string $pages;
 
-    const FOLDER_CACHE = 'cache';
-
-
     public function __construct(string $path)
     {
-        $this->folder = $path;
-
-        $this->pages = sprintf('%s/'.self::CONTENT_FOLDER, $path);
-
-        if (!is_dir($this->pages)) {
-            mkdir($this->pages);
-        }
-
-        $cache = sprintf('%s/%s', $path, self::FOLDER_CACHE);
-
-        if (!is_dir($cache)) {
-            mkdir($cache);
-        }
-
+        $this->pages = $this->checkFolderExist(sprintf('%s/%s', $path, self::CONTENT_FOLDER));
     }
 
     /**
@@ -40,18 +21,31 @@ class PagesService extends MainController
      */
     public function data(string $full_path): array
     {
-
         $url = parse_url($full_path);
 
-        return parent::parseMD($this->pages . $url['path'] . '/index.md');
-    }
+        $page =  parent::load($this->pages . $url['path'] . '/index.yaml');
 
-    /**
-     * @return string
-     */
-    public function Folder(): string
-    {
-        return $this->folder;
-    }
+        if (empty($page)){
+            throw new PageNotFound(sprintf('Config for %s not found',$full_path));
+        }
 
+        $content = [];
+
+        if (!empty($page['content'])) {
+            foreach ($page['content'] as $content_file) {
+                $filename = sprintf('%s/%s/%s.html', $this->pages, $url['path'], $content_file);
+
+                try {
+                    if (is_file($filename)) {
+                        array_push($content, file_get_contents($filename));
+                    }
+                } catch (\Exception $exception) {
+
+                }
+            }
+        }
+
+        return [$page, $content];
+
+    }
 }

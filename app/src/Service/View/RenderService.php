@@ -1,21 +1,18 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\View;
 
 
+use App\Service\DefaultService;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TemplateWrapper;
 
-class RenderService
+class RenderService extends DefaultService
 {
 
-    const FOLDER_TEMPLATES = 'templates';
-
-    const FOLDER_CACHE = 'twig';
-
-    private string $path;
+    private string $templates;
 
     private string $cache;
 
@@ -25,28 +22,20 @@ class RenderService
 
     public function __construct(string $path)
     {
-        $this->path = sprintf('%s/%s', $path, self::FOLDER_TEMPLATES);
-        if (!is_dir($this->path)) {
-            mkdir($this->path);
-        }
+        $this->templates = $this->checkFolderExist(sprintf('%s/%s', $path, self::FOLDER_TEMPLATES));
 
-        $this->cache = sprintf('%s/%s/%s', $path, PagesService::FOLDER_CACHE, self::FOLDER_CACHE);
+        $this->cache = $this->checkFolderExist(sprintf('%s/%s/%s', $path, self::FOLDER_CACHE, 'twig'));
 
-        if (!is_dir(sprintf('%s/%s/%s', $path, PagesService::FOLDER_CACHE, self::FOLDER_CACHE))) {
-            mkdir($this->cache);
-        }
-
-
-        $loader = new FilesystemLoader($this->path);
+        $loader = new FilesystemLoader($this->templates);
 
         $this->twig = new Environment($loader, [
             //'cache' => $this->cache
         ]);
-
     }
 
-    public function load(array $page, array $menu)
+    public function loadTemplate(array $page, array $menu)
     {
+
         $this->template = $this->twig->load($page['template']);
     }
 
@@ -57,7 +46,7 @@ class RenderService
 
     public function page404(array $menu, $content = 'Page not found', $title = 'Page not found error'): string
     {
-        $template404 = sprintf('%s/%s', $this->path, 'page404.html.twig');
+        $template404 = sprintf('%s/%s', $this->templates, 'page404.html.twig');
 
         if (is_file($template404)) {
             $template = $this->twig->load('page404.html.twig');
@@ -70,7 +59,7 @@ class RenderService
 
     public function error(array $menu, $content = 'Error', $title = 'Main Error'): string
     {
-        $template500 = sprintf('%s/%s', $this->path, 'page500.html.twig');
+        $template500 = sprintf('%s/%s', $this->templates, 'page500.html.twig');
 
         if (is_file($template500)) {
             $template = $this->twig->load('page500.html.twig');
