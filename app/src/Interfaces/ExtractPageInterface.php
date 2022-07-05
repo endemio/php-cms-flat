@@ -1,10 +1,8 @@
 <?php
 
-
 namespace App\Interfaces;
 
-
-abstract class ExtractPageInterface
+interface ExtractPageInterface
 {
-    abstract public function check(array $param):array;
+    public function check(array $param):array;
 }

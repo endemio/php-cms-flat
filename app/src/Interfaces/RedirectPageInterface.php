@@ -1,10 +1,8 @@
 <?php
 
-
 namespace App\Interfaces;
 
-
-abstract class RedirectPageInterface
+interface RedirectPageInterface
 {
-    abstract public function check(array $param):bool;
+    public function check(array $param): bool;
 }
