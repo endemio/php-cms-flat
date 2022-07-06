@@ -4,6 +4,8 @@
 namespace App\Service;
 
 
+use App\Exceptions\PageNotFound;
+
 class TransformService extends ConfigService
 {
 
@@ -44,7 +46,11 @@ class TransformService extends ConfigService
                     require_once $this->website_path . '/transforms/list/' . $item['folder'] . '/index.php';
                     $class_name = "\Lists\\" . $item['class'];
                     $instance = new $class_name();
-                    return [$item, $instance->check($matches)];
+                    try {
+                        return [$item, $instance->check($matches)];
+                    } catch (PageNotFound $exception){
+                        return [null, null];
+                    }
                 }
             }
         }
